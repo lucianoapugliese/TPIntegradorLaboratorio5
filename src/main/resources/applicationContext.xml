@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context-3.2.xsd
+		http://www.springframework.org/schema/mvc 
+		http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
+		http://www.springframework.org/schema/mvc 
+	http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/tx 
+	http://www.springframework.org/schema/tx/spring-tx-2.5.xsd"
+    	xmlns:tx="http://www.springframework.org/schema/tx">
+
+
+	<!-- Transaction Manager -->
+	<bean id="transactionManager"
+		class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactoryBean"></property>
+	</bean>
+
+	<!-- Para que lea los metodos anotados con @Transactional -->
+	<tx:annotation-driven transaction-manager="transactionManager" />
+	
+	
+	<!-- ****** LOGIN ****** -->
+	
+	
+	<!-- SERVICIO/NEGOCIO PARA PACIENTE -->
+	<bean id="usuarioServiceBean" class="frgp.utn.edu.ar.servicioImpl.UsuarioServicioImpl">
+	    <property name="dataAccess" ref="usuarioDataAccessBean"></property>
+	</bean>
+
+	<!-- EL SERVICIO NECESITA EL DAO (ahora usa la interfaz) -->
+	<bean id="usuarioDataAccessBean" class="frgp.utn.edu.ar.daoImpl.UsuarioDaoImpl" 
+	    scope="singleton"> 
+	    <property name="sessionFactory" ref="sessionFactoryBean"></property> 
+	</bean>
+	
+	
+	<!-- ****** ESPECIALIDADES ****** -->
+	
+	
+	<!-- SERVICIO/NEGOCIO PARA ESPECIALIDAD -->
+	<bean id="serviceBean" class="frgp.utn.edu.ar.servicioImpl.EspecialidadServicioImpl">
+	    <property name="dataAccess" ref="dataAccessBean"></property>
+	</bean>
+
+	<!-- EL SERVICIO NECESITA EL DAO (ahora usa la interfaz) -->
+	<bean id="dataAccessBean" class="frgp.utn.edu.ar.daoImpl.EspecialidadDaoImpl" 
+	    scope="singleton"> 
+	    <property name="sessionFactory" ref="sessionFactoryBean"></property> 
+	</bean>
+	
+	
+	<!-- ****** PACIENTES ****** -->
+	
+	
+	<!-- SERVICIO/NEGOCIO PARA PACIENTE -->
+	<bean id="pacienteServiceBean" class="frgp.utn.edu.ar.servicioImpl.PacienteServicioImpl">
+	    <property name="dataAccess" ref="pacienteDataAccessBean"></property>
+	</bean>
+
+	<!-- EL SERVICIO NECESITA EL DAO (ahora usa la interfaz) -->
+	<bean id="pacienteDataAccessBean" class="frgp.utn.edu.ar.daoImpl.PacienteDaoImpl" 
+	    scope="singleton"> 
+	    <property name="sessionFactory" ref="sessionFactoryBean"></property> 
+	</bean>
+	
+	
+	<!-- ****** MEDICOS ****** -->
+	
+	
+	<!-- SERVICIO/NEGOCIO PARA MEDICO -->
+	<bean id="medicoServiceBean" class="frgp.utn.edu.ar.servicioImpl.MedicoServicioImpl">
+	    <property name="dataAccess" ref="MedicoDataAccessBean"></property>
+	</bean>
+
+	<!-- EL SERVICIO NECESITA EL DAO (ahora usa la interfaz) -->
+	<bean id="MedicoDataAccessBean" class="frgp.utn.edu.ar.daoImpl.MedicoDaoImpl" 
+	    scope="singleton"> 
+	    <property name="sessionFactory" ref="sessionFactoryBean"></property> 
+	</bean>	
+	
+	
+	<!-- ****** TURNOS ****** -->
+	
+	
+	<!-- SERVICIO/NEGOCIO PARA TURNO -->
+	<bean id="turnoServiceBean" class="frgp.utn.edu.ar.servicioImpl.TurnoServicioImpl">
+	    <property name="dataAccess" ref="TurnoDataAccessBean"></property>
+	</bean>
+
+	<!-- EL SERVICIO NECESITA EL DAO (ahora usa la interfaz) -->
+	<bean id="TurnoDataAccessBean" class="frgp.utn.edu.ar.daoImpl.TurnoDaoImpl" 
+	    scope="singleton"> 
+	    <property name="sessionFactory" ref="sessionFactoryBean"></property> 
+	</bean>	
+	
+	
+
+	<!-- Define un dataSource, en este bean se configura los parametros de la db -->
+	<bean id="dataSourceBean"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<!--  <property name="driverClassName" value="com.mysql.jdbc.Driver" /> -->
+		<property name="driverClassName" value="com.mysql.cj.jdbc.Driver" />
+		<property name="url" value="jdbc:mysql://localhost:3306/TPINT_GRUPO_2_LAB5?createDatabaseIfNotExist=true" />
+		<property name="username" value="root" />
+		<property name="password" value="root" />
+	</bean>
+
+	<!-- Session factory de Hibernate -->
+	<bean id="sessionFactoryBean"
+		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSourceBean" />
+
+		<!-- En esta propiedad deberian agregarse todas las clases anotadas con JPA. -->
+		<property name="annotatedClasses">
+			<list>
+				<value>frgp.utn.edu.ar.dominio.Especialidad</value>
+				<value>frgp.utn.edu.ar.dominio.Paciente</value>
+				<value>frgp.utn.edu.ar.dominio.Usuario</value>
+				<value>frgp.utn.edu.ar.dominio.Medico</value>
+				<value>frgp.utn.edu.ar.dominio.Turno</value>
+			</list>
+		</property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQL5InnoDBDialect</prop>
+				<prop key="show_sql">true</prop >
+				
+				<!-- CREACION DE LA BASE -->
+				<prop key="hibernate.hbm2ddl.auto">update</prop> 
+			</props>
+		</property>
+	</bean>
+
+	
+	
+</beans>

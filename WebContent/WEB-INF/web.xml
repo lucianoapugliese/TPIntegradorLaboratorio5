@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+	version="3.1">
+
+
+
+
+	<display-name>TPINT_GRUPO_2_LAB5</display-name>
+
+	<!-- RECIBIR LAS PETICIONES -->
+
+	<!-- Configuración de archivo de bienvenida predeterminado (se mostrará 
+		inicio.jsp al acceder a la raíz) -->
+
+
+	<!-- Ahora comienza con una peticion -->
+	<welcome-file-list>
+		<welcome-file>index.html</welcome-file>
+	</welcome-file-list>
+
+
+
+	<!-- Configuración del Servlet principal de Spring MVC -->
+	<servlet>
+		<!-- Nombre identificador del servlet -->
+		<servlet-name>spring</servlet-name>
+		<!-- Clase DispatcherServlet que maneja todas las solicitudes -->
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<!-- Carga este servlet al iniciar la aplicación (prioridad 1) -->
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+
+
+	<!-- Mapeo de URLs que manejará el DispatcherServlet -->
+	<servlet-mapping>
+		<servlet-name>spring</servlet-name>
+		<!-- Todas las URLs que terminen en .html serán manejadas por Spring MVC -->
+		<url-pattern>*.html</url-pattern>
+	</servlet-mapping>
+
+	<!-- Listener que carga el contexto de Spring al iniciar la aplicación web -->
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+
+	<!-- VINCULACIÓN WEB.XML Y SPRING-SERVLET.XML -->
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<!-- <param-value>/WEB-INF/spring-servlet.xml</param-value> -->
+		<param-value> classpath:applicationContext.xml</param-value>
+	</context-param>
+
+</web-app>
